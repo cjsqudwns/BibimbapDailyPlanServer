@@ -1,7 +1,7 @@
 package com.bibimbap.DailyPlanServer.domain.member.service;
 
-import com.bibimbap.DailyPlanServer.domain.member.Member;
-import com.bibimbap.DailyPlanServer.domain.member.MemberRepository;
+import com.bibimbap.DailyPlanServer.domain.member.entity.Member;
+import com.bibimbap.DailyPlanServer.domain.member.entity.MemberRepository;
 import com.bibimbap.DailyPlanServer.domain.member.dto.MemberRequestDto;
 import com.bibimbap.DailyPlanServer.domain.member.dto.MemberResponseDto;
 import com.bibimbap.DailyPlanServer.global.error.exception.EntityNotFoundException;
@@ -9,7 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static com.bibimbap.DailyPlanServer.global.error.ErrorCode.MEMBER_NOT_FOUND;
+import static com.bibimbap.DailyPlanServer.global.error.ErrorCode.USERNAME_ALREADY_EXIST;
 
 @RequiredArgsConstructor
 @Service
@@ -18,6 +21,9 @@ public class MemberService {
 
     @Transactional
     public MemberResponseDto saveOrUpdateMember(MemberRequestDto memberRequestDto){
+        Optional<Member> byName = memberRepository.findByName(memberRequestDto.getName());
+        if(byName.isPresent())
+            throw new EntityNotFoundException(USERNAME_ALREADY_EXIST, "이미 존재하는 사용자 이름입니다 : " + memberRequestDto.getName());
         Member memberEntity = Member.builder()
                 .email(memberRequestDto.getEmail())
                 .name(memberRequestDto.getName())

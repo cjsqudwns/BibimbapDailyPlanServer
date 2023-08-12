@@ -1,4 +1,4 @@
-package com.bibimbap.DailyPlanServer.domain.member;
+package com.bibimbap.DailyPlanServer.domain.member.entity;
 
 import com.bibimbap.DailyPlanServer.domain.member.dto.MemberResponseDto;
 import jakarta.persistence.*;

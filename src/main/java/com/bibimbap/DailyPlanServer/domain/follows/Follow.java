@@ -1,6 +1,6 @@
 package com.bibimbap.DailyPlanServer.domain.follows;
 
-import com.bibimbap.DailyPlanServer.domain.member.Member;
+import com.bibimbap.DailyPlanServer.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

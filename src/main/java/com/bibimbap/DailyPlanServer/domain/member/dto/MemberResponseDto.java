@@ -1,11 +1,9 @@
 package com.bibimbap.DailyPlanServer.domain.member.dto;
 
-import com.bibimbap.DailyPlanServer.domain.member.Member;
-import jakarta.websocket.server.ServerEndpoint;
+import com.bibimbap.DailyPlanServer.domain.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 @NoArgsConstructor

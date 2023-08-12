@@ -13,7 +13,17 @@ public enum ErrorCode {
 
     //DailyPlan
     DAILYPLAN_ALREADY_EXIST(400, "D001", "이미 데일리 플랜을 작성하였습니다. PUT으로 update 해주세요"),
-    DAILYPLAN_NOT_FOUND(400, "D002", "존재 하지 않는 데일리 플랜입니다"),;
+    DAILYPLAN_NOT_FOUND(400, "D002", "존재 하지 않는 데일리 플랜입니다"),
+    DAILYPLAN_MONTHLIST_NOT_FOUND(400, "D003", "해당 월에 작성된 데일리 플랜이 없습니다"),
+    DAILYPLAN_NOT_HAVE_TODOLIST(400, "D004", "해당 데일리 플랜에 작성된 투두리스트가 없습니다"),
+
+    //ToDo
+    TODOLIST_NOT_FOUND(400, "T001", "존재 하지 않는 투두리스트입니다"),
+
+    //Category
+    CATEGORY_NOT_FOUND(400, "CT001", "존재 하지 않는 카테고리입니다")
+
+    ;
 
     private int status;
     private String code;

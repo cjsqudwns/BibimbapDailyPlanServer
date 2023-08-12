@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static com.bibimbap.DailyPlanServer.global.result.ResultCode.GET_USERPROFILE_SUCCESS;
-import static com.bibimbap.DailyPlanServer.global.result.ResultCode.SAVE_OR_UPDATE_SUCCESS;
+import static com.bibimbap.DailyPlanServer.global.result.ResultCode.MEMBER_SAVE_OR_UPDATE_SUCCESS;
 
 @RequiredArgsConstructor
 @RestController
@@ -20,11 +20,11 @@ public class MemberController {
     @PostMapping("") // 하나의 함수에서 save랑 동시에 update하는 방법?
     public ResponseEntity<ResultResponse> saveOrUpdateMember(@RequestBody MemberRequestDto memberRequestDto){
         MemberResponseDto memberResponseDto = memberService.saveOrUpdateMember(memberRequestDto);
-        return ResponseEntity.ok(ResultResponse.of(SAVE_OR_UPDATE_SUCCESS, memberResponseDto));
+        return ResponseEntity.ok(ResultResponse.of(MEMBER_SAVE_OR_UPDATE_SUCCESS, memberResponseDto));
     }
-    @GetMapping("/findById/{member_id}") // 멤버 아이디와 이메일 앞에 주소를 추가하지 않았을 때 서버 오류 생김:ambiguous
-    public ResponseEntity<ResultResponse> findMemberById(@PathVariable Long member_id){
-        MemberResponseDto memberResponseDto = memberService.findMemberById(member_id);
+    @GetMapping("/findById/{memberId}") // 멤버 아이디와 이메일 앞에 주소를 추가하지 않았을 때 서버 오류 생김:ambiguous
+    public ResponseEntity<ResultResponse> findMemberById(@PathVariable Long memberId){
+        MemberResponseDto memberResponseDto = memberService.findMemberById(memberId);
         return ResponseEntity.ok(ResultResponse.of(GET_USERPROFILE_SUCCESS, memberResponseDto));
     }
     @GetMapping("/findByEmail/{email}")
@@ -32,4 +32,6 @@ public class MemberController {
         MemberResponseDto memberResponseDto = memberService.findMemberByEmail(email);
         return ResponseEntity.ok(ResultResponse.of(GET_USERPROFILE_SUCCESS, memberResponseDto));
     }
+
+
 }
