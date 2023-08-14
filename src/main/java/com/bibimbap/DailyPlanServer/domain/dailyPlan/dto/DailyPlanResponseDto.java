@@ -11,14 +11,13 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class DailyPlanResponseDto {
+    private Long dailyPlanId;
     private String yearMonth;
-    private String date;
-    private List<ToDo> toDoResponseDtos;
-
+    private int day;
     @Builder
     public DailyPlanResponseDto(DailyPlan entity){
+        this.dailyPlanId = entity.getId();
         this.yearMonth = entity.getYearMonth();
-        this.date = entity.getDate();
-        this.toDoResponseDtos = entity.getToDo();
+        this.day = entity.getDay();
     }
 }

@@ -22,16 +22,9 @@ public class MemberController {
         MemberResponseDto memberResponseDto = memberService.saveOrUpdateMember(memberRequestDto);
         return ResponseEntity.ok(ResultResponse.of(MEMBER_SAVE_OR_UPDATE_SUCCESS, memberResponseDto));
     }
-    @GetMapping("/findById/{memberId}") // 멤버 아이디와 이메일 앞에 주소를 추가하지 않았을 때 서버 오류 생김:ambiguous
-    public ResponseEntity<ResultResponse> findMemberById(@PathVariable Long memberId){
-        MemberResponseDto memberResponseDto = memberService.findMemberById(memberId);
-        return ResponseEntity.ok(ResultResponse.of(GET_USERPROFILE_SUCCESS, memberResponseDto));
+    @GetMapping("/{memberId}") // 멤버 아이디와 이메일 앞에 주소를 추가하지 않았을 때 서버 오류 생김:ambiguous
+    public ResponseEntity<ResultResponse> getMember(@PathVariable Long memberId){
+        MemberResponseDto memberById = memberService.findMemberById(memberId);
+        return ResponseEntity.ok(ResultResponse.of(GET_USERPROFILE_SUCCESS, memberById));
     }
-    @GetMapping("/findByEmail/{email}")
-    public ResponseEntity<ResultResponse> findMemberByEmail(@PathVariable String email){
-        MemberResponseDto memberResponseDto = memberService.findMemberByEmail(email);
-        return ResponseEntity.ok(ResultResponse.of(GET_USERPROFILE_SUCCESS, memberResponseDto));
-    }
-
-
 }

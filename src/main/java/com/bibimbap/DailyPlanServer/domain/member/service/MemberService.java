@@ -21,26 +21,18 @@ public class MemberService {
 
     @Transactional
     public MemberResponseDto saveOrUpdateMember(MemberRequestDto memberRequestDto){
-        Optional<Member> byName = memberRepository.findByName(memberRequestDto.getName());
-        if(byName.isPresent())
-            throw new EntityNotFoundException(USERNAME_ALREADY_EXIST, "이미 존재하는 사용자 이름입니다 : " + memberRequestDto.getName());
-        Member memberEntity = Member.builder()
-                .email(memberRequestDto.getEmail())
-                .name(memberRequestDto.getName())
-                .profileUrl(memberRequestDto.getProfileUrl())
+        Member member = memberRepository.findByEmail(memberRequestDto.getEmail())
+                .map(entity -> entity.update(memberRequestDto.getName(), memberRequestDto.getProfileUrl()))
+                .orElse(memberRequestDto.toEntity());
+        return MemberResponseDto.builder()
+                .entity(memberRepository.save(member))
                 .build();
-        return memberRepository.save(memberEntity).toMemberResponseDto();
     }
 
     @Transactional(readOnly = true)
     public MemberResponseDto findMemberById(Long id) {
         return memberRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(MEMBER_NOT_FOUND, "해당 id의 유저가 없습니다 : " + id)).toMemberResponseDto();
-    }
-
-    @Transactional(readOnly = true)
-    public MemberResponseDto findMemberByEmail(String email) {
-        return memberRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException(MEMBER_NOT_FOUND, "해당 이메일의 유저가 없습니다 : " + email)).toMemberResponseDto();
+                .map(MemberResponseDto::new)
+                .orElseThrow(() -> new EntityNotFoundException(MEMBER_NOT_FOUND, "해당 id의 유저가 없습니다 : " + id));
     }
 }

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.bibimbap.DailyPlanServer.global.error.ErrorCode.DAILYPLAN_NOT_FOUND;
+import static com.bibimbap.DailyPlanServer.global.error.ErrorCode.*;
 
 @RequiredArgsConstructor
 @Service
@@ -23,47 +23,49 @@ public class DailyPlanService {
     private final MemberRepository memberRepository;
     private final DailyPlanRepository dailyPlanRepository;
 
+    private final int YEAR_MONTH_START_INDEX = 0;
+    private final int DAY_START_INDEX = 6;
+    private final int DAY_END_INDEX = 8;
     @Transactional
-    public DailyPlanResponseDto saveDailyPlan(Long memberId, String date){
+    public Long saveDailyPlan(Long memberId, String yearMonthDay){
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND, "해당 id의 유저가 없습니다 : " + memberId));
-        String yearMonth = date.substring(0, 6);
-        String day = date.substring(7);
-        DailyPlan dailyPlanEntity = DailyPlan.builder()
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND, "해당 멤버가 존재하지 않습니다 : " + memberId));
+        String yearMonth = yearMonthDay.substring(YEAR_MONTH_START_INDEX, DAY_START_INDEX);
+        int day = Integer.parseInt(yearMonthDay.substring(DAY_START_INDEX, DAY_END_INDEX));
+        DailyPlan dailyPlan = DailyPlan.builder()
                 .member(member)
                 .yearMonth(yearMonth)
-                .date(day)
+                .day(day)
                 .build();
-        return dailyPlanRepository.save(dailyPlanEntity).toDailyPlanResponseDto();
+        return dailyPlanRepository.save(dailyPlan).getId();
     }
 
     @Transactional(readOnly = true)
-    public DailyPlanResponseDto findById(Long id){
-        return dailyPlanRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(DAILYPLAN_NOT_FOUND, "해당 id의 데일리 플랜이 없습니다 : " + id)).toDailyPlanResponseDto();
+    public DailyPlanResponseDto findById(Long dailyPlanId){
+        return dailyPlanRepository.findById(dailyPlanId)
+                .map(DailyPlanResponseDto::new)
+                .orElseThrow(() -> new EntityNotFoundException(DAILYPLAN_NOT_FOUND, "해당 데일리 플랜이 존재하지 않습니다  : " + dailyPlanId));
     }
 
     @Transactional
-    public boolean deleteDailyPlan(Long id){
-        Optional<DailyPlan> byId = dailyPlanRepository.findById(id);
-        if(!byId.isPresent())
-            throw new EntityNotFoundException(DAILYPLAN_NOT_FOUND,"해당 id의 데일리 플랜이 없습니다 : " + id);
-        dailyPlanRepository.deleteById(id);
+    public boolean deleteDailyPlan(Long dailyPlanId){
+        DailyPlan dailyPlan = dailyPlanRepository.findById(dailyPlanId)
+                .orElseThrow(() -> new EntityNotFoundException(DAILYPLAN_NOT_FOUND,  "해당 데일리 플랜이 존재하지 않아 삭제할 수 없습니다  : " + dailyPlanId));
+        dailyPlanRepository.delete(dailyPlan);
         return true;
     }
 
     @Transactional(readOnly = true)
-    public List<DailyPlanResponseDto> findMonth(Long id){
-        Optional<DailyPlan> byId = dailyPlanRepository.findById(id);
-        if(!byId.isPresent())
-            throw new EntityNotFoundException(DAILYPLAN_NOT_FOUND,"해당 id의 데일리 플랜이 없습니다 : " + id);
-        List<DailyPlan> monthlyData = dailyPlanRepository.findByYearMonth("202308");
-        return monthlyData.stream() // 그냥 여기서 db접근말고 filter를 써도 되는지?
-                .map(entity -> {
-                    return DailyPlanResponseDto.builder()
-                            .entity(entity)
-                            .build();
-                })
+    public List<DailyPlanResponseDto> getMonthDailyPlanList(Long memberId, String yearMonth){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException(MEMBER_NOT_FOUND, "해당 멤버가 존재하지 않습니다 : " + memberId));
+        List<DailyPlanResponseDto> dailyPlanResponseDtoList = dailyPlanRepository.findByYearMonth(yearMonth)
+                .stream()
+                .map(DailyPlanResponseDto::new)
                 .collect(Collectors.toList());
+        if(dailyPlanResponseDtoList.size() == 0)
+            throw new EntityNotFoundException(DAILYPLAN_MONTHLIST_NOT_FOUND, "해당 월에 작성된 데일리 플래너가 없습니다 : " + yearMonth);
+
+        return dailyPlanResponseDtoList;
     }
 }

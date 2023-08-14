@@ -17,14 +17,14 @@ import static com.bibimbap.DailyPlanServer.global.result.ResultCode.*;
 public class DailyPlanController {
     private final DailyPlanService dailyPlanService;
 
-    @PostMapping("/{member_id}/{date}")
-    public ResponseEntity<ResultResponse> saveDailyPlan(@PathVariable Long member_id, @PathVariable String date){
-        DailyPlanResponseDto dailyPlanResponseDto = dailyPlanService.saveDailyPlan(member_id, date);
-        return ResponseEntity.ok(ResultResponse.of(DAILYPLAN_SAVE_SUCCESS, dailyPlanResponseDto));
+    @PostMapping("/{memberId}")
+    public ResponseEntity<ResultResponse> saveDailyPlan(@PathVariable Long memberId, @RequestParam("date") String date){
+        Long saveId = dailyPlanService.saveDailyPlan(memberId, date);
+        return ResponseEntity.ok(ResultResponse.of(DAILYPLAN_SAVE_SUCCESS, saveId));
     }
 
     @GetMapping("/{dailyPlanId}")
-    public ResponseEntity<ResultResponse> findById(@PathVariable Long dailyPlanId){
+    public ResponseEntity<ResultResponse> getDailyPlan(@PathVariable Long dailyPlanId){
         DailyPlanResponseDto dailyPlanResponseDto = dailyPlanService.findById(dailyPlanId);
         return ResponseEntity.ok(ResultResponse.of(GET_DAILYPLAN_SUCCESS, dailyPlanResponseDto));
     }
@@ -34,10 +34,10 @@ public class DailyPlanController {
         return ResponseEntity.ok(ResultResponse.of(DELETE_DAILPLAN_SUCCESS, dailyPlanService.deleteDailyPlan(dailyPlanId)));
     }
 
-    @GetMapping("/{member_id}/month")
-    public ResponseEntity<ResultResponse> findMonthById(@PathVariable Long member_id){
-        List<DailyPlanResponseDto> dailyPlanResponseDtoList = dailyPlanService.findMonth(member_id);
-        return ResponseEntity.ok(ResultResponse.of(GET_DAILYPLAN_SUCCESS, dailyPlanResponseDtoList));
+    @GetMapping("/{memberId}/{yearMonth}")
+    public ResponseEntity<ResultResponse> getMonthDailyPlanList(@PathVariable Long member_id, @PathVariable String yearMonth){
+        List<DailyPlanResponseDto> monthDailyPlanListByMemberId = dailyPlanService.getMonthDailyPlanList(member_id, yearMonth);
+        return ResponseEntity.ok(ResultResponse.of(GET_MONTH_DAILYPLAN_SUCCESS, monthDailyPlanListByMemberId));
     }
 
 

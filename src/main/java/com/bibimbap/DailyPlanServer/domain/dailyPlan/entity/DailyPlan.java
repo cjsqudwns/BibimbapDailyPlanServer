@@ -16,30 +16,27 @@ import java.util.List;
 @Entity
 public class DailyPlan {
     @Id
+    @Column(name = "DAILYPLAN_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
+    @Column(nullable = false)
     private String yearMonth;
-    private String date;
+
+    @Column(nullable = false)
+    private int day;
 
     @OneToMany(mappedBy = "dailyPlan")
     List<ToDo> toDo = new ArrayList<>();
 
     @Builder
-    public DailyPlan(Member member,String yearMonth, String date){
+    public DailyPlan(Member member,String yearMonth, int day){
         this.member = member;
         this.yearMonth = yearMonth;
-        this.date = date;
-    }
-
-    public DailyPlanResponseDto toDailyPlanResponseDto(){
-
-        return DailyPlanResponseDto.builder()
-                .entity(this)
-                .build();
+        this.day = day;
     }
 }

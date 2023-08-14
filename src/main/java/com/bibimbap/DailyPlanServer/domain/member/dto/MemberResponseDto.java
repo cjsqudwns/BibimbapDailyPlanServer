@@ -12,8 +12,7 @@ public class MemberResponseDto {
     private String name;
     private String email;
     private String profileUrl;
-    private Long planSuccessCount;
-    private Long challengeSuccessCount;
+    private int planSuccessCount;
     @Builder
     public MemberResponseDto(Member entity){
         this.id = entity.getId();
@@ -21,6 +20,5 @@ public class MemberResponseDto {
         this.email = entity.getEmail();
         this.profileUrl = entity.getProfileUrl();
         this.planSuccessCount = entity.getPlanSuccessCount();
-        this.challengeSuccessCount = entity.getChallengeSuccessCount();
     }
 }
