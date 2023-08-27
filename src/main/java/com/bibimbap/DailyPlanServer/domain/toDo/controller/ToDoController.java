@@ -25,34 +25,38 @@ public class ToDoController {
         Long toDoId = toDoService.saveToDo(dailyPlanId, toDoRequestDto);
         return ResponseEntity.ok(ResultResponse.of(SAVE_TODO_SUCCESS, toDoId));
     }
-    @PutMapping("/{todoId}") //ToDo 수정하기
-    public ResponseEntity<ResultResponse> updateDToDo(@PathVariable Long todoId, @RequestBody ToDoUpdateDto toDoUpdateDto){
-        return ResponseEntity.ok(ResultResponse.of(UPDATE_TODO_SUCCESS, toDoService.updateDToDo(todoId, toDoUpdateDto)));
+    @PutMapping("/{toDoId}") //ToDo 수정하기
+    public ResponseEntity<ResultResponse> updateToDo(@PathVariable Long toDoId, @RequestBody ToDoRequestDto toDoRequestDto){
+        boolean isUpdate = toDoService.updateToDo(toDoId, toDoRequestDto);
+        return ResponseEntity.ok(ResultResponse.of(UPDATE_TODO_SUCCESS, isUpdate));
     }
-    @GetMapping("/{todoId}") //ToDo 가져오기
-    public ResponseEntity<ResultResponse> findToDoById(@PathVariable Long todoId){
-        ToDoResponseDto toDoResponseDto = toDoService.findToDoById(todoId);
+    @GetMapping("/{toDoId}") //ToDo 가져오기
+    public ResponseEntity<ResultResponse> getToDoById(@PathVariable Long toDoId){
+        ToDoResponseDto toDoResponseDto = toDoService.findToDoById(toDoId);
         return ResponseEntity.ok(ResultResponse.of(GET_TODO_SUCCESS, toDoResponseDto));
     }
-
-    @DeleteMapping("/{todoId}") //ToDo 삭제하기
-    public ResponseEntity<ResultResponse> deleteToDo(@PathVariable Long todoId){
-        return ResponseEntity.ok(ResultResponse.of(DELETE_TODO_SUCCESS, toDoService.deleteToDo(todoId)));
+    @GetMapping("/{dailyPlanId}/list") //ToDo 다 가져오기
+    public ResponseEntity<ResultResponse> getAllToDoByDailyPlanId(@PathVariable Long dailyPlanId){
+        List<ToDoResponseDto> toDoResponseDtos = toDoService.findAllByDailyPlanId(dailyPlanId);
+        return ResponseEntity.ok(ResultResponse.of(GET_TODO_ALL_SUCCESS, toDoResponseDtos));
     }
 
-    @GetMapping("/{dailyplanId}/list") //해당 날짜 ToDo 모두 가져오기
-    public ResponseEntity<ResultResponse> findAllToDoById(@PathVariable Long dailyplanId){
-        return ResponseEntity.ok(ResultResponse.of(GET_TODO_ALL_SUCCESS, toDoService.deleteToDo(dailyplanId)));
+    @DeleteMapping("/{toDoId}") //ToDo 삭제하기
+    public ResponseEntity<ResultResponse> deleteToDo(@PathVariable Long toDoId){
+        boolean isDelete = toDoService.deleteToDo(toDoId);
+        return ResponseEntity.ok(ResultResponse.of(DELETE_TODO_SUCCESS, isDelete));
     }
 
-    @PostMapping("/complete/{todoId}")
-    public ResponseEntity<ResultResponse> completeToDo(@PathVariable Long todoId){
-        return ResponseEntity.ok(ResultResponse.of(COMPLETE_TODO, toDoService.deleteToDo(todoId)));
+    @PostMapping("/complete/{toDoId}")
+    public ResponseEntity<ResultResponse> completeToDo(@PathVariable Long toDoId){
+        boolean isComplete = toDoService.completeToDoById(toDoId);
+        return ResponseEntity.ok(ResultResponse.of(COMPLETE_TODO, isComplete));
     }
 
-    @PostMapping("/fail/{todoId}")
-    public ResponseEntity<ResultResponse> failToDo(@PathVariable Long todoId){
-        return ResponseEntity.ok(ResultResponse.of(FAIL_TODO, toDoService.deleteToDo(todoId)));
+    @PostMapping("/fail/{toDoId}")
+    public ResponseEntity<ResultResponse> failToDo(@PathVariable Long toDoId){
+        boolean isFail = toDoService.failToDoById(toDoId);
+        return ResponseEntity.ok(ResultResponse.of(FAIL_TODO, isFail));
     }
 }
 

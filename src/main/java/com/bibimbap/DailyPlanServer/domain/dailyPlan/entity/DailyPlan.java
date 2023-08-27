@@ -31,7 +31,7 @@ public class DailyPlan {
     private int day;
 
     @OneToMany(mappedBy = "dailyPlan")
-    List<ToDo> toDo = new ArrayList<>();
+    List<ToDo> toDos = new ArrayList<>();
 
     @Builder
     public DailyPlan(Member member,String yearMonth, int day){

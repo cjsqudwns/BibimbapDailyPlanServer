@@ -19,7 +19,7 @@ public class ToDoResponseDto {
     public ToDoResponseDto(ToDo entity){
         this.id = entity.getId();
         this.title = entity.getTitle();
-        //this.toDoStatusCode
+        this.toDoStatusCode = entity.getToDoStatus().getCode();
         this.alarmStartTime = entity.getAlarmStartTime();
         this.alarmEndTime = entity.getAlarmEndTime();
         this.categoryCode = entity.getCategory().getCategoryCode().getCode();

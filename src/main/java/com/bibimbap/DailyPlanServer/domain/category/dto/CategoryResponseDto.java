@@ -11,17 +11,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CategoryResponseDto {
     private Long id;
-    private Member member;
-    private CategoryCode categoryCode;
-    private Long countByToDo;
-    private Long successToDoCount;
+    private String title;
+    private String code;
+    private int countByDailyPlan;
+    private int countByChallenge;
+    private int successDailyPlanCount;
+    private int successChallengeCount;
 
     @Builder
     public CategoryResponseDto(Category entity){
         this.id = entity.getId();
-        this.member = entity.getMember();
-        this.categoryCode = entity.getCategoryCode();
-        this.countByToDo = entity.getCountByToDo();
-        this.successToDoCount = entity.getSuccessToDoCount();
+        this.title = entity.getCategoryCode().getTitle();
+        this.code = entity.getCategoryCode().getCode();
+        this.countByDailyPlan = entity.getCountByToDo();
+        //this.countByChallenge = entity.getCountByChallenge();
+        this.successDailyPlanCount = entity.getSuccessToDoCount();
+        //this.successChallengeCount = entity.getSuccessChallengeCount();
     }
 }
